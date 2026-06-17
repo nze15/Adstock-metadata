@@ -7,6 +7,7 @@ import {
 } from '../services/tokenMetadataService';
 import { getRecentTransactions, getEnrichedTransactions } from '../services/transactionService';
 import { generateTokenInsights } from '../services/insightService';
+import { processMetadataUpdate } from '../services/metadataUpdateService';
 
 const router = express.Router();
 
@@ -73,6 +74,32 @@ router.get('/insights/:mint', async (req, res) => {
       success: true,
       data: insights,
     });
+  } catch (error) {
+    res.status(500).json({ success: false, error: (error as Error).message });
+  }
+});
+
+router.post('/update-metadata', async (req, res) => {
+  try {
+    const { mint, name, symbol, uri, sellerFeeBasisPoints, signedTransaction } = req.body;
+
+    if (!signedTransaction) {
+      return res.status(400).json({
+        success: false,
+        error: 'Signed transaction is required',
+      });
+    }
+
+    const result = await processMetadataUpdate(
+      { mint, name, symbol, uri, sellerFeeBasisPoints },
+      signedTransaction
+    );
+
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+
+    res.json(result);
   } catch (error) {
     res.status(500).json({ success: false, error: (error as Error).message });
   }

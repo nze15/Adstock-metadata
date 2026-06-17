@@ -6,8 +6,9 @@ import EmbedTools from './tabs/EmbedTools';
 import Transactions from './tabs/Transactions';
 import Share from './tabs/Share';
 import Insights from './tabs/Insights';
+import UpdateMetadata from './tabs/UpdateMetadata';
 
-type Tab = 'verification' | 'links' | 'embed' | 'transactions' | 'share' | 'insights';
+type Tab = 'verification' | 'links' | 'embed' | 'transactions' | 'share' | 'insights' | 'update';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('verification');
@@ -78,6 +79,7 @@ function App() {
             {[
               { id: 'verification', label: '✓ Verification' },
               { id: 'insights', label: '💡 Insights' },
+              { id: 'update', label: '✏️ Update' },
               { id: 'links', label: '🔗 Live Links' },
               { id: 'embed', label: '</> Embed' },
               { id: 'transactions', label: '📊 Transactions' },
@@ -110,6 +112,7 @@ function App() {
           <>
             {activeTab === 'verification' && <Verification />}
             {activeTab === 'insights' && <Insights />}
+            {activeTab === 'update' && <UpdateMetadata />}
             {activeTab === 'links' && <LiveLinks />}
             {activeTab === 'embed' && <EmbedTools />}
             {activeTab === 'transactions' && <Transactions />}

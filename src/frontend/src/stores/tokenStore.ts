@@ -1,5 +1,14 @@
 import { create } from 'zustand';
 
+interface UpdateMetadataState {
+  isUpdating: boolean;
+  updateStatus: 'idle' | 'pending' | 'success' | 'failed';
+  updateSignature?: string;
+  updateShareableUrl?: string;
+  updateSolscanUrl?: string;
+  updateError?: string;
+}
+
 interface TokenStore {
   tokenMint: string;
   metadata: any;
@@ -9,6 +18,7 @@ interface TokenStore {
   transactions: any[];
   trustScore: number;
   lastUpdated: number;
+  updateMetadataState: UpdateMetadataState;
   setTokenMint: (mint: string) => void;
   setMetadata: (metadata: any) => void;
   setVerification: (verification: any) => void;
@@ -17,6 +27,8 @@ interface TokenStore {
   setTransactions: (transactions: any[]) => void;
   setTrustScore: (score: number) => void;
   updateLastUpdated: () => void;
+  setUpdateMetadataState: (state: UpdateMetadataState) => void;
+  resetUpdateMetadataState: () => void;
 }
 
 export const useTokenStore = create<TokenStore>((set) => ({
@@ -28,6 +40,10 @@ export const useTokenStore = create<TokenStore>((set) => ({
   transactions: [],
   trustScore: 0,
   lastUpdated: 0,
+  updateMetadataState: {
+    isUpdating: false,
+    updateStatus: 'idle',
+  },
   setTokenMint: (mint) => set({ tokenMint: mint }),
   setMetadata: (metadata) => set({ metadata }),
   setVerification: (verification) => set({ verification }),
@@ -36,4 +52,11 @@ export const useTokenStore = create<TokenStore>((set) => ({
   setTransactions: (transactions) => set({ transactions }),
   setTrustScore: (score) => set({ trustScore: score }),
   updateLastUpdated: () => set({ lastUpdated: Date.now() }),
+  setUpdateMetadataState: (updateMetadataState) => set({ updateMetadataState }),
+  resetUpdateMetadataState: () => set({
+    updateMetadataState: {
+      isUpdating: false,
+      updateStatus: 'idle',
+    },
+  }),
 }));
